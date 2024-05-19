@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <button id="authBtn">Authorize</button> 
+    <script>
+        function func(){
+            var tmpWindow = window.open('about:blank')
+            tmpWindow.location = 
+            "https://testapi.openbanking.or.kr/oauth/2.0/authorize?" +
+            "response_type=code&"+
+            "client_id=db435b83-9fd7-48e5-8f5f-92c937ffbe62&"+ 
+            "redirect_uri=http://127.0.0.1:5000/&"+
+            "scope=login inquiry transfer&"+
+            "state=12345678123456781234567812345678&"+
+            "auth_type=0"
+        };
+        document.getElementById('authBtn').addEventListener('click', func);
+    </script>
+</body>
+</html>

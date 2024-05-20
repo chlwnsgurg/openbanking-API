@@ -18,32 +18,44 @@ def info(access_token,user_seq_no):
     print('Account List')
     for i,info in enumerate(res['res_list']):
         print(str(i+1)+') '+info['bank_name']+' '+info['account_num_masked']+' - '+info['account_holder_name'])
-    idx=int(input('Choose Account>'))
+    idx=int(input('Choose Account:'))
     return res['res_list'][idx-1]
 
-def api():
-        global account,account_info
-        global fintech_use_num
-        idx
-        idx-=1
-        account_name=account[idx]
-        fintech_use_num=account_info[idx]['fintech_use_num']
-
-def balance():
-    global access_token,user_seq_no
-    global fintech_use_num
+def balance(access_token,fintech_use_num):
     url= 'https://testapi.openbanking.or.kr/v2.0/account/balance/fin_num'
     headers = {
         'Authorization': 'Bearer ' + access_token
     }
     params = {
-            'bank_tran_id': 'M202401128'+'U'+str(round(time.time()/10)),
+            'bank_tran_id': client_use_code+'U'+str(round(time.time())%int(1e9)),
             'fintech_use_num': fintech_use_num,
             'tran_dtime': time.strftime('%Y%m%d%H%M%S')
     }
     response = requests.get(url=url, params=params, headers=headers)
     result=json.loads(response.text)
-    return result
+    print(result)
+    return
+
+def transaction(from_date,to_date, access_token,fintech_use_num):
+    url= 'https://testapi.openbanking.or.kr/v2.0/account/transaction_list/fin_num'
+    headers = {
+        'Authorization': 'Bearer ' + access_token
+    }
+    params = {
+            'bank_tran_id': client_use_code+'U'+str(round(time.time())%int(1e9)),
+            'fintech_use_num': fintech_use_num,
+            'inquiry_type' : 'A',
+            'inquiry_base' : 'D',
+            'from_date' : from_date,
+            'to_date' : to_date,
+            'sort_order' : 'D',
+            'tran_dtime': time.strftime('%Y%m%d%H%M%S')
+    }
+    response = requests.get(url=url, params=params, headers=headers)
+    result=json.loads(response.text)
+    print(result)
+    return
+
 
 
 if __name__ == '__main__':
@@ -66,14 +78,12 @@ if __name__ == '__main__':
                 choice=input('Select> ')
                 if choice == '1':
                     print('잔액조회')
-                    for idx,info in enumerate(account):
-                        print(str(idx+1)+'.',info)
-                    api()
+                    balance(access_token,fintech_use_num)
                 elif choice == '2':
                     print('거래내역조회')
-                    for idx,info in enumerate(account):
-                        print(str(idx+1)+'.',info)
-                    balance()
+                    from_date=input('조회 시작 일자(YYYYMMDD): ')
+                    to_date=input('조회 종료 일자(YYYYMMDD): ')
+                    transaction(from_date,to_date, access_token,fintech_use_num)
                 elif choice == '3':
                     break
                 else:

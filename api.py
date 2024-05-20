@@ -33,7 +33,6 @@ def balance(access_token,fintech_use_num):
     }
     response = requests.get(url=url, params=params, headers=headers)
     result=json.loads(response.text)
-    print(result)
     return
 
 def transaction(from_date,to_date, access_token,fintech_use_num):
@@ -53,7 +52,6 @@ def transaction(from_date,to_date, access_token,fintech_use_num):
     }
     response = requests.get(url=url, params=params, headers=headers)
     result=json.loads(response.text)
-    print(result)
     return
 
 
